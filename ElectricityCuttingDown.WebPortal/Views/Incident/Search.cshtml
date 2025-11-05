@@ -1,0 +1,154 @@
+﻿@using ElectricityCuttingDown.WebPortal.Models;
+@using ElectricityCuttingDown.WebPortal.Models.ViewModels;
+@model IncidentSearchViewModel
+
+@{
+    ViewData["Title"] = "Search Incidents";
+}
+
+<div class="space-y-6">
+    <!-- Header -->
+    <div class="flex items-center justify-between">
+        <h1 class="text-3xl font-bold">Search Incidents</h1>
+        <div class="flex gap-2">
+            <button class="btn-secondary">📊 Export Excel</button>
+            <button class="btn-secondary">📄 Export PDF</button>
+        </div>
+    </div>
+
+    <!-- Search Form -->
+    <form method="get" class="bg-dark border border-dark rounded-lg p-6 space-y-4">
+        <h2 class="text-lg font-semibold mb-4">Advanced Search</h2>
+        
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <!-- Source -->
+            <div>
+                <label class="block text-gray-400 text-sm font-medium mb-2">Source</label>
+                <select name="source" class="w-full px-4 py-2 bg-gray-700 border border-dark rounded-lg text-white focus:outline-none focus:border-blue-500">
+                    <option value="">All Sources</option>
+                    <option value="1" selected="@(Model.Source == 1 ? "selected" : null)">Source A (Cabins)</option>
+                    <option value="2" selected="@(Model.Source == 2 ? "selected" : null)">Source B (Cables)</option>
+                </select>
+            </div>
+
+            <!-- Problem Type -->
+            <div>
+                <label class="block text-gray-400 text-sm font-medium mb-2">Problem Type</label>
+                <select name="problemType" class="w-full px-4 py-2 bg-gray-700 border border-dark rounded-lg text-white focus:outline-none focus:border-blue-500">
+                    <option value="">All Types</option>
+                    <option value="1">Fire</option>
+                    <option value="2">High Pressure</option>
+                    <option value="3">High Consumption</option>
+                    <option value="12">Cable Cut</option>
+                </select>
+            </div>
+
+            <!-- Status -->
+            <div>
+                <label class="block text-gray-400 text-sm font-medium mb-2">Status</label>
+                <select name="status" class="w-full px-4 py-2 bg-gray-700 border border-dark rounded-lg text-white focus:outline-none focus:border-blue-500">
+                    <option value="">All Statuses</option>
+                    <option value="Open" selected="@(Model.Status == "Open" ? "selected" : null)">Open</option>
+                    <option value="Closed" selected="@(Model.Status == "Closed" ? "selected" : null)">Closed</option>
+                </select>
+            </div>
+
+            <!-- Start Date -->
+            <div>
+                <label class="block text-gray-400 text-sm font-medium mb-2">Start Date</label>
+                <input type="date" name="startDate" class="w-full px-4 py-2 bg-gray-700 border border-dark rounded-lg text-white focus:outline-none focus:border-blue-500" />
+            </div>
+
+            <!-- End Date -->
+            <div>
+                <label class="block text-gray-400 text-sm font-medium mb-2">End Date</label>
+                <input type="date" name="endDate" class="w-full px-4 py-2 bg-gray-700 border border-dark rounded-lg text-white focus:outline-none focus:border-blue-500" />
+            </div>
+
+            <!-- Buttons -->
+            <div class="flex items-end gap-2">
+                <button type="submit" class="btn-primary w-full">🔍 Search</button>
+                <button type="reset" class="btn-secondary w-full">Reset</button>
+            </div>
+        </div>
+    </form>
+
+    <!-- Results Info -->
+    <div class="bg-dark border border-dark rounded-lg p-4">
+        <p class="text-gray-300">
+            Found <span class="font-bold text-blue-400">@Model.TotalCount</span> incidents
+        </p>
+    </div>
+
+    <!-- Results Table -->
+    <div class="bg-dark border border-dark rounded-lg overflow-hidden">
+        <div class="overflow-x-auto">
+            <table class="w-full">
+                <thead class="bg-gray-800 border-b border-dark">
+                    <tr>
+                        <th class="px-4 py-3 text-left text-gray-400 text-sm font-medium">Incident ID</th>
+                        <th class="px-4 py-3 text-left text-gray-400 text-sm font-medium">Source</th>
+                        <th class="px-4 py-3 text-left text-gray-400 text-sm font-medium">Problem Type</th>
+                        <th class="px-4 py-3 text-left text-gray-400 text-sm font-medium">Created</th>
+                        <th class="px-4 py-3 text-left text-gray-400 text-sm font-medium">Status</th>
+                        <th class="px-4 py-3 text-left text-gray-400 text-sm font-medium">Affected</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.Results.Any())
+                    {
+                        @foreach (var incident in Model.Results)
+                        {
+                            <tr class="border-b border-dark hover:bg-gray-800/50">
+                                <td class="px-4 py-3 text-white font-mono">@incident.Cutting_Down_Incident_ID</td>
+                                <td class="px-4 py-3 text-gray-300">@incident.Channel</td>
+                                <td class="px-4 py-3 text-gray-300">@incident.ProblemType</td>
+                                <td class="px-4 py-3 text-gray-400 text-sm">@incident.ActualCreateDate.ToString("dd/MM/yyyy HH:mm")</td>
+                                <td class="px-4 py-3">
+                                    @if (incident.Status == "Open")
+                                    {
+                                        <span class="px-3 py-1 bg-red-900 text-red-300 rounded-full text-xs font-semibold">Open</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="px-3 py-1 bg-green-900 text-green-300 rounded-full text-xs font-semibold">Closed</span>
+                                    }
+                                </td>
+                                <td class="px-4 py-3 text-gray-300">@incident.ImpactedCustomers</td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="6" class="px-4 py-8 text-center text-gray-400">
+                                No incidents found. Try adjusting your search criteria.
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Pagination -->
+    @if (Model.TotalCount > Model.PageSize)
+    {
+        <div class="flex items-center justify-between bg-dark border border-dark rounded-lg p-4">
+            <span class="text-gray-400">
+                Page <span class="font-bold">@Model.PageNumber</span> of <span class="font-bold">@Math.Ceiling((double)Model.TotalCount / Model.PageSize)</span>
+            </span>
+            <div class="flex gap-2">
+                @if (Model.PageNumber > 1)
+                {
+                    <a href="?pageNumber=@(Model.PageNumber - 1)" class="btn-secondary">← Previous</a>
+                }
+                @if (Model.PageNumber < Math.Ceiling((double)Model.TotalCount / Model.PageSize))
+                {
+                    <a href="?pageNumber=@(Model.PageNumber + 1)" class="btn-secondary">Next →</a>
+                }
+            </div>
+        </div>
+    }
+</div>
+

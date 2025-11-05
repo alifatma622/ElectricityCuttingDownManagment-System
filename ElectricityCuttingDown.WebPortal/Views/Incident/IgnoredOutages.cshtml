@@ -1,0 +1,85 @@
+﻿@model IgnoredOutagesViewModel
+
+@{
+    ViewData["Title"] = "Ignored Outages";
+}
+
+<div class="space-y-6">
+    <!-- Header -->
+    <div class="flex items-center justify-between mb-6">
+        <h1 class="text-3xl font-bold">Ignored Outages</h1>
+        <div class="flex gap-2">
+            <button class="btn-secondary">📊 Export Excel</button>
+            <button class="btn-secondary">📄 Export PDF</button>
+        </div>
+    </div>
+
+    <!-- Search Bar -->
+    <div class="bg-dark border border-dark rounded-lg p-4 flex gap-4">
+        <input type="text" placeholder="Search..." class="flex-1 px-4 py-2 bg-gray-700 border border-dark rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-blue-500" />
+        <button class="btn-secondary">🔍 Search</button>
+    </div>
+
+    <!-- Table -->
+    <div class="bg-dark border border-dark rounded-lg overflow-hidden">
+        <div class="overflow-x-auto">
+            <table class="w-full">
+                <thead class="bg-gray-800 border-b border-dark">
+                    <tr>
+                        <th class="px-4 py-3 text-left">
+                            <input type="checkbox" class="w-4 h-4" />
+                        </th>
+                        <th class="px-4 py-3 text-left text-gray-400 text-sm font-medium">Incident ID</th>
+                        <th class="px-4 py-3 text-left text-gray-400 text-sm font-medium">Created Date</th>
+                        <th class="px-4 py-3 text-left text-gray-400 text-sm font-medium">Synch Date</th>
+                        <th class="px-4 py-3 text-left text-gray-400 text-sm font-medium">Cable Name</th>
+                        <th class="px-4 py-3 text-left text-gray-400 text-sm font-medium">Cabin Name</th>
+                        <th class="px-4 py-3 text-left text-gray-400 text-sm font-medium">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.IgnoredOutages.Any())
+                    {
+                        @foreach (var outage in Model.IgnoredOutages)
+                        {
+                            <tr class="border-b border-dark hover:bg-gray-800/50">
+                                <td class="px-4 py-3">
+                                    <input type="checkbox" class="w-4 h-4" />
+                                </td>
+                                <td class="px-4 py-3 text-white font-mono">@outage.Cutting_Down_Incident_ID</td>
+                                <td class="px-4 py-3 text-gray-300">@outage.ActualCreateDate.ToString("dd/MM/yyyy HH:mm")</td>
+                                <td class="px-4 py-3 text-gray-300">@outage.SynchCreateDate.ToString("dd/MM/yyyy HH:mm")</td>
+                                <td class="px-4 py-3 text-gray-300">@(outage.Cable_Name ?? "-")</td>
+                                <td class="px-4 py-3 text-gray-300">@(outage.Cabin_Name ?? "-")</td>
+                                <td class="px-4 py-3">
+                                    <button class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg text-sm transition">Delete</button>
+                                </td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="7" class="px-4 py-8 text-center text-gray-400">
+                                No ignored outages found.
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Pagination -->
+    <div class="flex items-center justify-between bg-dark border border-dark rounded-lg p-4">
+        <span class="text-gray-400">
+            Total: <span class="font-bold text-white">@Model.TotalCount</span>
+        </span>
+        <div class="flex gap-2">
+            <button class="btn-secondary">← Previous</button>
+            <span class="text-gray-400">Page 1 of 1</span>
+            <button class="btn-secondary">Next →</button>
+        </div>
+    </div>
+</div>
+

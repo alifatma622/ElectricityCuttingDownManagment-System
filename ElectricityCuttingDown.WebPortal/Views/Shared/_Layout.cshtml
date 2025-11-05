@@ -1,0 +1,49 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Electricity Cutting Down</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { background-color: #111827; color: #f3f4f6; }
+        .bg-dark { background-color: #1f2937; }
+        .bg-dark-header { background-color: #0f172a; }
+        .border-dark { border-color: #374151; }
+        .btn-primary { @@apply bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-semibold transition; }
+        .btn-secondary { @@apply bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 rounded-lg transition; }
+        table tbody tr:hover { background-color: rgba(55, 65, 81, 0.5); }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="bg-dark-header border-b border-dark sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="bg-gradient-to-r from-blue-600 to-purple-600 px-6 py-2 rounded-lg">
+                    <a href="/" class="text-xl font-bold text-white no-underline">⚡ Cutting Portal</a>
+                </div>
+            </div>
+            <nav class="flex items-center gap-6">
+                <a href="/" class="text-gray-300 hover:text-white transition">Dashboard</a>
+                <a href="/Incident/Search" class="text-gray-300 hover:text-white transition">Search</a>
+                <a href="/Incident/Add" class="text-gray-300 hover:text-white">Add Incident</a>
+                <a href="/Incident/IgnoredOutages" class="text-gray-300 hover:text-white">Ignored Outages</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-6 py-8">
+        @RenderBody()
+    </main>
+
+    <footer class="bg-dark-header border-t border-dark mt-12">
+        <div class="max-w-7xl mx-auto px-6 py-6 text-center text-gray-400">
+            <p>&copy; 2025 Electricity Management System</p>
+        </div>
+    </footer>
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
+
